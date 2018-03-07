@@ -52,6 +52,7 @@ app.delete('/accounts/:name', (req, res) => {
 	let name = req.params.name;
 	let accounts = accountsDB.filter((account) => account.name !== name);
 	if (accounts.length != accountsDB.length) {
+		accountsDB = accounts;
 		res.send('Account deleted');
 	} else {
 		res.status(400).status({
