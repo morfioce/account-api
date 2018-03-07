@@ -53,26 +53,17 @@ app.put('/accounts/:name',(req, res) => {
    let account = accountsDB.find((account) => account.name === customer_name)
    if(account) {
 
-       if(new_account.type === 'INC') {
-           accountsDB = accountsDB.map((account) => {
-           if(account.name === customer_name){
-             account.balance += new_account.value;
-            }
-            return account;
-          })
-       }
-
-       else if (new_account.type === 'DEC') {
-           accountsDB = accountsDB.map((account) => {
-           if(account.name === customer_name){
-             account.balance -= new_account.value
-            }
-            return account;
-          })
-       } else {
-         res.status(400).send('Bad Request');
-         return;
-       }
+       
+	   accountsDB = accountsDB.map((account) => {
+		   if(account.name === customer_name){
+		      if (new_account.type === 'INC') {
+			account.balance += new_account.value;
+		      } else if (new_account.type === 'DEC') {
+			account.balance -= new_account.value;
+		      }
+		    }
+		    return account;
+	  })
 
        res.send('account updated');
      } else {
