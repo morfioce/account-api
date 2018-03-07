@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // accounts represent our data base
-const accountsDB = [{name:'test-user', balance:100}];
+let accountsDB = [{name:'test-user', balance:100}];
 
 // Define a route to repond to:
 // GET /accounts
@@ -47,6 +47,31 @@ app.post('/accounts', (req, res) => {
 	}
 })
 
+app.put('/accounts/:name',(req, res) => {
+   let new_account = req.body;
+   let customer_name = req.params.name
+   let account = accountsDB.find((account) => account.name === customer_name)
+   if(account) {
+
+       
+	   accountsDB = accountsDB.map((account) => {
+		   if(account.name === customer_name){
+		      if (new_account.type === 'INC') {
+			account.balance += new_account.value;
+		      } else if (new_account.type === 'DEC') {
+			account.balance -= new_account.value;
+		      }
+		    }
+		    return account;
+	  })
+
+       res.send('account updated');
+     } else {
+       res.status(400).send('Bad Resquest');
+     }
+
+})
+
 // DELETE /accounts/:name
 app.delete('/accounts/:name', (req, res) => {
 	let name = req.params.name;
@@ -69,4 +94,3 @@ app.listen(3000, (err) => {
   	console.log('Server started at port 3000')
   }
 });
-
